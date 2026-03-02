@@ -41,3 +41,7 @@
 .idea/
 .vscode/
 .kamal/
+
+config/application.yml
+config/credentials.yml.enc
+.ruby-gemset
