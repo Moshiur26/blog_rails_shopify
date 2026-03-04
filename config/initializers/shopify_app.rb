@@ -12,9 +12,9 @@ ShopifyApp.configure do |config|
   config.reauth_on_access_scope_changes = true
   config.webhooks = [
     { topic: "app/uninstalled", address: "webhooks/app_uninstalled"},
-    { topic: "customers/data_request", address: "webhooks/customers_data_request" },
-    { topic: "customers/redact", address: "webhooks/customers_redact"},
-    { topic: "shop/redact", address: "webhooks/shop_redact"}
+    # { topic: "customers/data_request", address: "webhooks/customers_data_request" },
+    # { topic: "customers/redact", address: "webhooks/customers_redact"},
+    # { topic: "shop/redact", address: "webhooks/shop_redact"}
   ]
 
   config.api_key = ENV.fetch('SHOPIFY_API_KEY', '').presence
@@ -41,22 +41,22 @@ ShopifyApp.configure do |config|
   end
 end
 
-# Rails.application.config.after_initialize do
-#   if ShopifyApp.configuration.api_key.present? && ShopifyApp.configuration.secret.present?
-#     ShopifyAPI::Context.setup(
-#       api_key: ShopifyApp.configuration.api_key,
-#       api_secret_key: ShopifyApp.configuration.secret,
-#       api_version: ShopifyApp.configuration.api_version,
-#       host: ENV['HOST'],
-#       scope: ShopifyApp.configuration.scope,
-#       is_private: !ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', '').empty?,
-#       is_embedded: ShopifyApp.configuration.embedded_app,
-#       log_level: :info,
-#       logger: Rails.logger,
-#       private_shop: ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', nil),
-#       user_agent_prefix: "ShopifyApp/#{ShopifyApp::VERSION}"
-#     )
-#
-#     ShopifyApp::WebhooksManager.add_registrations
-#   end
-# end
+Rails.application.config.after_initialize do
+  if ShopifyApp.configuration.api_key.present? && ShopifyApp.configuration.secret.present?
+    ShopifyAPI::Context.setup(
+      api_key: ShopifyApp.configuration.api_key,
+      api_secret_key: ShopifyApp.configuration.secret,
+      api_version: ShopifyApp.configuration.api_version,
+      host: ENV['HOST'],
+      scope: ShopifyApp.configuration.scope,
+      is_private: !ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', '').empty?,
+      is_embedded: ShopifyApp.configuration.embedded_app,
+      log_level: :info,
+      logger: Rails.logger,
+      private_shop: ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', nil),
+      user_agent_prefix: "ShopifyApp/#{ShopifyApp::VERSION}"
+    )
+
+    # ShopifyApp::WebhooksManager.add_registrations
+  end
+end

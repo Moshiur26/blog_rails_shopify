@@ -2,7 +2,7 @@
 
 client_id = "6686c181bf3e096c1bfe346d844eb81c"
 name = "application-1"
-application_url = "https://example.com"
+application_url = "https://eda9-103-112-54-122.ngrok-free.app"
 embedded = true
 
 [webhooks]
@@ -13,4 +13,4 @@ api_version = "2026-04"
 scopes = "write_products"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://eda9-103-112-54-122.ngrok-free.app/api/auth" ]

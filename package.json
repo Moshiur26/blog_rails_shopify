@@ -12,5 +12,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@shopify/app": "^0.33.1",
+    "@shopify/cli": "^3.91.0"
+  }
 }
