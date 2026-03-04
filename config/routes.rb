@@ -16,4 +16,5 @@ Rails.application.routes.draw do
   # root "posts#index"
   get  "/auth",         to: "auth#install"
   get  "/auth/callback", to: "auth#callback"
+  post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
 end
