@@ -14,4 +14,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  get  "/auth",         to: "auth#install"
+  get  "/auth/callback", to: "auth#callback"
 end
