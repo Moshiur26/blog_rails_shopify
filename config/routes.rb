@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   get  "/auth",         to: "auth#install"
   get  "/auth/callback", to: "auth#callback"
   post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
+  post "/webhooks/orders_create", to: "webhooks#orders_create"
+  post "/webhooks/products_update", to: "webhooks#products_update"
 end
