@@ -39,11 +39,13 @@ end
 
 Rails.application.config.after_initialize do
   if ShopifyApp.configuration.api_key.present? && ShopifyApp.configuration.secret.present?
+    app_host = ENV["SHOPIFY_APP_URL"].presence || ENV["HOST"]
+
     ShopifyAPI::Context.setup(
       api_key: ShopifyApp.configuration.api_key,
       api_secret_key: ShopifyApp.configuration.secret,
       api_version: ShopifyApp.configuration.api_version,
-      host: ENV['HOST'],
+      host: app_host,
       scope: ShopifyApp.configuration.scope,
       is_private: !ENV.fetch('SHOPIFY_APP_PRIVATE_SHOP', '').empty?,
       is_embedded: ShopifyApp.configuration.embedded_app,

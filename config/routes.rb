@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   root :to => 'home#index'
   get '/products', :to => 'products#index'
+  get  "/auth",         to: "auth#install"
+  get  "/auth/callback", to: "auth#callback"
+  post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
+  post "/webhooks/orders_create", to: "webhooks#orders_create"
+  post "/webhooks/products_update", to: "webhooks#products_update"
+
   mount ShopifyApp::Engine, at: '/'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -14,9 +20,4 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  get  "/auth",         to: "auth#install"
-  get  "/auth/callback", to: "auth#callback"
-  post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
-  post "/webhooks/orders_create", to: "webhooks#orders_create"
-  post "/webhooks/products_update", to: "webhooks#products_update"
 end

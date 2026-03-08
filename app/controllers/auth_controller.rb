@@ -60,7 +60,7 @@ class AuthController < ApplicationController
     record = Shop.find_or_initialize_by(shopify_domain: shop)
 
     record.update!(
-      access_token: access_token,
+      shopify_token: access_token,
       installed: true,
       uninstalled_at: nil
     )
@@ -108,7 +108,7 @@ class AuthController < ApplicationController
       mutation.to_json,
       {
         "Content-Type" => "application/json",
-        "X-Shopify-Access-Token" => shop.access_token
+        "X-Shopify-Access-Token" => shop.shopify_token
       }
     )
   end
