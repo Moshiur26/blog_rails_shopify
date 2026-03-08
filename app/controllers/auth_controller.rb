@@ -69,15 +69,20 @@ class AuthController < ApplicationController
   end
 
   def register_webhooks(shop)
-    topics = %w[APP_UNINSTALLED ORDERS_CREATE PRODUCTS_UPDATE]
+    webhook_map = {
+      "APP_UNINSTALLED" => "app_uninstalled",
+      "ORDERS_CREATE" => "orders_create",
+      "PRODUCTS_UPDATE" => "products_update"
+    }
 
-    topics.each do |topic|
-      create_webhook(shop, topic)
+    webhook_map.each do |topic, path|
+      create_webhook(shop, topic, path)
     end
   end
 
-  def create_webhook(shop, topic)
-    uri = URI("https://#{shop.shopify_domain}/admin/api/2024-01/graphql.json")
+  def create_webhook(shop, topic, path)
+    api_version = ShopifyApp.configuration.api_version
+    uri = URI("https://#{shop.shopify_domain}/admin/api/#{api_version}/graphql.json")
 
     mutation = {
       query: <<~GRAPHQL
@@ -85,7 +90,7 @@ class AuthController < ApplicationController
         webhookSubscriptionCreate(
           topic: #{topic},
           webhookSubscription: {
-            callbackUrl: "#{ENV["SHOPIFY_APP_URL"]}/webhooks/#{topic.downcase}",
+            callbackUrl: "#{ENV["SHOPIFY_APP_URL"]}/webhooks/#{path}",
             format: JSON
           }
         ) {
