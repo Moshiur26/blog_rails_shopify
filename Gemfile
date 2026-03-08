@@ -68,3 +68,4 @@ end
 
 gem 'shopify_app'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'rqrcode'
