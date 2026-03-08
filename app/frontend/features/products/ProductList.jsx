@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
-import useSessionToken from "@/hooks/useSessionToken";
 import { apiGet } from "@/lib/apiClient";
 
-export default function ProductList({ shopOrigin }) {
-  const { token, loading: tokenLoading, error: tokenError } = useSessionToken();
-  const [products, setProducts] = useState([]);
+export default function ProductList({ shopOrigin, initialProducts = [] }) {
+  const [products, setProducts] = useState(initialProducts);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialProducts.length === 0);
 
   useEffect(() => {
-    if (tokenLoading || tokenError || !token) return;
-
     let mounted = true;
 
-    apiGet("/api/v1/products", token)
+    apiGet("/api/v1/products")
       .then((response) => response.json())
       .then((data) => {
         if (!mounted) return;
@@ -31,10 +27,10 @@ export default function ProductList({ shopOrigin }) {
     return () => {
       mounted = false;
     };
-  }, [token, tokenError, tokenLoading]);
+  }, []);
 
-  if (tokenLoading || loading) return <p>Loading products...</p>;
-  if (tokenError || error) return <p>{error || "Authorization failed"}</p>;
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>{error}</p>;
   if (products.length === 0) return <p>No products found.</p>;
 
   return (

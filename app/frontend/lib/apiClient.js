@@ -1,13 +1,15 @@
-export async function apiGet(path, token) {
-  const headers = {
-    "Content-Type": "application/json"
-  };
+function withEmbeddedQuery(path) {
+  const query = window.location.search;
+  if (!query) return path;
+  return path.includes("?") ? `${path}&${query.slice(1)}` : `${path}${query}`;
+}
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const response = await fetch(path, { headers });
+export async function apiGet(path) {
+  const response = await fetch(withEmbeddedQuery(path), {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
 
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);

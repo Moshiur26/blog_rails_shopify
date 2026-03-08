@@ -3,6 +3,7 @@
 class HomeController < ApplicationController
   include ShopifyApp::EmbeddedApp
   include ShopifyApp::EnsureInstalled
+  include ShopifyApp::EnsureHasSession
   include ShopifyApp::ShopAccessScopesVerification
 
   def index
@@ -13,8 +14,24 @@ class HomeController < ApplicationController
       @host = params[:host]
       @bootstrap_data = {
         shopOrigin: @shop_origin,
-        host: @host
+        host: @host,
+        products: bootstrap_products
       }
     end
+  end
+
+  private
+
+  def bootstrap_products
+    ShopifyAPI::Product.all(limit: 10).map do |product|
+      {
+        id: product.id,
+        title: product.title,
+        handle: product.handle
+      }
+    end
+  rescue StandardError => e
+    Rails.logger.error("bootstrap_products failed: #{e.class} - #{e.message}")
+    []
   end
 end

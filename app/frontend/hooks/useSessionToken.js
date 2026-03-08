@@ -9,10 +9,13 @@ export default function useSessionToken() {
   useEffect(() => {
     let mounted = true;
 
-    fetchSessionToken()
+    Promise.race([
+      fetchSessionToken(),
+      new Promise((resolve) => setTimeout(() => resolve(""), 2500))
+    ])
       .then((sessionToken) => {
         if (!mounted) return;
-        setToken(sessionToken);
+        setToken(sessionToken || "");
       })
       .catch((err) => {
         if (!mounted) return;

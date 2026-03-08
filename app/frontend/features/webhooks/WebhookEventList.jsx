@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
-import useSessionToken from "@/hooks/useSessionToken";
 import { apiGet } from "@/lib/apiClient";
 
 export default function WebhookEventList() {
-  const { token, loading: tokenLoading, error: tokenError } = useSessionToken();
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (tokenLoading || tokenError || !token) return;
-
     let mounted = true;
 
-    apiGet("/api/v1/webhook_events", token)
+    apiGet("/api/v1/webhook_events")
       .then((response) => response.json())
       .then((data) => {
         if (!mounted) return;
@@ -31,10 +27,10 @@ export default function WebhookEventList() {
     return () => {
       mounted = false;
     };
-  }, [token, tokenError, tokenLoading]);
+  }, []);
 
-  if (tokenLoading || loading) return <p>Loading webhook events...</p>;
-  if (tokenError || error) return <p>{error || "Authorization failed"}</p>;
+  if (loading) return <p>Loading webhook events...</p>;
+  if (error) return <p>{error}</p>;
   if (events.length === 0) return <p>No webhook events captured yet.</p>;
 
   return (

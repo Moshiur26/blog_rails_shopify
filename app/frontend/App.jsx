@@ -11,7 +11,7 @@ export default function App({ bootstrap }) {
 
       <section className="panel">
         <h2>Products</h2>
-        <ProductList shopOrigin={bootstrap.shopOrigin} />
+        <ProductList shopOrigin={bootstrap.shopOrigin} initialProducts={bootstrap.products || []} />
       </section>
 
       <section className="panel">
