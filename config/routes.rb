@@ -1,9 +1,19 @@
 Rails.application.routes.draw do
-  root :to => 'home#index'
-  get '/products', :to => 'products#index'
-  get '/products/:id/qr_code', :to => 'products#qr_code'
-  get  "/auth",         to: "auth#install"
-  get  "/auth/callback", to: "auth#callback"
+  root to: "home#index"
+
+  namespace :api do
+    namespace :v1 do
+      get "/products", to: "products#index"
+      get "/products/:id/qr_code", to: "products#qr_code"
+      get "/webhook_events", to: "webhook_events#index"
+    end
+  end
+
+  get "/products", to: "api/v1/products#index"
+  get "/products/:id/qr_code", to: "api/v1/products#qr_code"
+
+  get "/auth", to: "auth#install"
+  get "/auth/callback", to: "auth#callback"
   post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
   post "/webhooks/orders_create", to: "webhooks#orders_create"
   post "/webhooks/products_update", to: "webhooks#products_update"

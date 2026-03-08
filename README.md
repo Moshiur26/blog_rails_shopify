@@ -1,24 +1,36 @@
-# README
+# Shopify Blog App (Rails + React)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Embedded Shopify app using Rails for backend APIs/webhooks and React (via Vite) for the view layer.
 
-Things you may want to cover:
+## Tech stack
 
-* Ruby version
+- Rails 8
+- Shopify App gem
+- React 19
+- Vite + `vite_rails`
 
-* System dependencies
+## Setup
 
-* Configuration
+1. Install Ruby gems:
+   - `bundle install`
+2. Install frontend deps:
+   - `npm install`
+3. Run the app in development:
+   - `bin/dev`
 
-* Database creation
+## Frontend architecture
 
-* Database initialization
+- React source: `app/frontend`
+- Entry point: `app/frontend/entrypoints/application.jsx`
+- Feature modules: `app/frontend/features/*`
+- API client + app bridge helpers: `app/frontend/lib/*`
 
-* How to run the test suite
+## API routes used by React
 
-* Services (job queues, cache servers, search engines, etc.)
+- `GET /api/v1/products`
+- `GET /api/v1/products/:id/qr_code`
+- `GET /api/v1/webhook_events`
 
-* Deployment instructions
+## Structure guide
 
-* ...
+See `docs/PROJECT_STRUCTURE.md` for the production-oriented folder layout and growth pattern.
