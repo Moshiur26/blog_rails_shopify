@@ -9,8 +9,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/products", to: "api/v1/products#index"
-  get "/products/:id/qr_code", to: "api/v1/products#qr_code"
+  get "/products", to: "products#index"
+  get "/products/:id/qr_code", to: "products#qr_code"
 
   get "/auth", to: "auth#install"
   get "/auth/callback", to: "auth#callback"

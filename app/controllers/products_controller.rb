@@ -4,8 +4,16 @@ class ProductsController < AuthenticatedController
   def index
     products = ShopifyAPI::Product.all(limit: 10)
     payload = products.map { |product| serialize_product(product) }
+    @bootstrap_data = {
+      shopOrigin: shop_domain,
+      host: params[:host],
+      products: payload
+    }
 
-    render(json: { products: payload })
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: { products: payload } }
+    end
   end
 
   def qr_code
