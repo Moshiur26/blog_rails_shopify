@@ -47,3 +47,4 @@ config/application.yml
 config/credentials.yml.enc
 .ruby-gemset
 /node_modules/*
+shopify.app.toml
