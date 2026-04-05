@@ -1,0 +1,88 @@
+<% content_for :vite_entrypoint, "products" %>
+
+<style>
+  .qr-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .qr-card {
+    max-width: 520px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .qr-header h1 {
+    font-size: 22px;
+    margin: 0;
+    color: #101828;
+  }
+
+  .qr-handle {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #667085;
+  }
+
+  .qr-code svg {
+    width: 220px;
+    height: 220px;
+  }
+
+  .qr-link {
+    font-size: 13px;
+    color: #344054;
+    word-break: break-word;
+    margin: 0;
+  }
+
+  .qr-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .qr-back,
+  .qr-open {
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #0b4e9b;
+    color: #0b4e9b;
+  }
+
+  .qr-open {
+    background: #0b4e9b;
+    color: #ffffff;
+  }
+</style>
+
+<div class="qr-page">
+  <div class="qr-card">
+    <div class="qr-header">
+      <h1><%= @product_title %></h1>
+      <p class="qr-handle"><%= @product_handle %></p>
+    </div>
+    <div class="qr-code">
+      <%= @qr_svg.html_safe %>
+    </div>
+    <p class="qr-link"><%= @product_url %></p>
+    <div class="qr-actions">
+      <%= link_to "Back to products", products_path(shop: params[:shop], host: params[:host]), class: "qr-back" %>
+      <%= link_to "Open product", @product_url, class: "qr-open", target: "_blank", rel: "noopener" %>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   get "/products", to: "products#index"
-  get "/products/:id/qr_code", to: "products#qr_code"
+  get "/products/:id/qr_code", to: "products#qr_code", as: :product_qr_code
 
   get "/auth", to: "auth#install"
   get "/auth/callback", to: "auth#callback"

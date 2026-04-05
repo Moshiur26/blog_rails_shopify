@@ -22,10 +22,15 @@ class ProductsController < AuthenticatedController
 
     return head :unprocessable_entity if handle.blank?
 
-    product_url = "https://#{shop_domain}/products/#{handle}"
-    svg = ProductQrCodeBuilder.svg_for_url(product_url)
+    @product_title = product.title
+    @product_handle = handle
+    @product_url = "https://#{shop_domain}/products/#{handle}"
+    @qr_svg = ProductQrCodeBuilder.svg_for_url(@product_url)
 
-    render plain: svg, content_type: "image/svg+xml"
+    respond_to do |format|
+      format.html { render :qr_code }
+      format.svg { render plain: @qr_svg, content_type: "image/svg+xml" }
+    end
   rescue StandardError
     head :not_found
   end
