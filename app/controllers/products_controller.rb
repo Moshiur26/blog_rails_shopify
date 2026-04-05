@@ -10,9 +10,15 @@ class ProductsController < AuthenticatedController
     query[:page_info] = page_info if page_info.present?
     products = ShopifyAPI::Product.all(**query)
     payload = products.map { |product| serialize_product(product) }
-    @next_page_info = products.next_page_info if products.respond_to?(:next_page_info)
-    @prev_page_info = products.previous_page_info if products.respond_to?(:previous_page_info)
-    @prev_page_info ||= products.prev_page_info if products.respond_to?(:prev_page_info)
+    if ShopifyAPI::Product.respond_to?(:next_page_info)
+      @next_page_info = ShopifyAPI::Product.next_page_info
+      @prev_page_info = ShopifyAPI::Product.previous_page_info if ShopifyAPI::Product.respond_to?(:previous_page_info)
+      @prev_page_info ||= ShopifyAPI::Product.prev_page_info if ShopifyAPI::Product.respond_to?(:prev_page_info)
+    else
+      @next_page_info = products.next_page_info if products.respond_to?(:next_page_info)
+      @prev_page_info = products.previous_page_info if products.respond_to?(:previous_page_info)
+      @prev_page_info ||= products.prev_page_info if products.respond_to?(:prev_page_info)
+    end
     @page_limit = limit
     @bootstrap_data = {
       shopOrigin: shop_domain,
