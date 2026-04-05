@@ -64,10 +64,14 @@ class ProductsController < AuthenticatedController
   private
 
   def serialize_product(product)
+    image = product.image
+    image ||= product.images&.first if product.respond_to?(:images)
+    image_url = image&.dig("src") || image&.dig(:src)
     {
       id: product.id,
       title: product.title,
-      handle: product.handle
+      handle: product.handle,
+      image_url: image_url
     }
   end
 
