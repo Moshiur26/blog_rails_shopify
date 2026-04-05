@@ -4,7 +4,7 @@ class ProductsController < AuthenticatedController
   def index
     products = ShopifyAPI::Product.all(limit: 10)
     payload = products.map { |product| serialize_product(product) }
-    @bootstrap_data = {
+    @product_data = {
       shopOrigin: shop_domain,
       host: params[:host],
       products: payload

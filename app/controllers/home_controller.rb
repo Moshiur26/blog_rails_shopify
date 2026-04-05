@@ -12,7 +12,7 @@ class HomeController < ApplicationController
     else
       @shop_origin = current_shopify_domain
       @host = params[:host]
-      @bootstrap_data = {
+      @product_data = {
         shopOrigin: @shop_origin,
         host: @host,
         products: bootstrap_products

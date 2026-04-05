@@ -1,6 +1,6 @@
 <% content_for :vite_entrypoint, "products" %>
 
-<% products = @bootstrap_data&.dig(:products) || [] %>
+<% products = @product_data&.dig(:products) || [] %>
 
 <style>
   .product-list {
@@ -51,7 +51,7 @@
   }
 </style>
 
-<div id="react-root" data-bootstrap="<%= json_escape(@bootstrap_data.to_json) %>">
+<div id="react-root" data-bootstrap="<%= json_escape(@product_data.to_json) %>">
   <% if products.any? %>
     <ul class="product-list">
       <% products.each do |product| %>
