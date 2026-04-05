@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <% application_name = ShopifyApp.configuration.application_name %>
-    <title><%= application_name %></title>
+    <title><%= application_name %> (app)</title>
     <%= csp_meta_tag %>
     <%= csrf_meta_tags %>
-    <%= vite_client_tag %>
-    <%= vite_javascript_tag "application" %>
+    <% vite_entrypoint = content_for?(:vite_entrypoint) ? content_for(:vite_entrypoint) : "application" %>
+    <%= vite_javascript_tag vite_entrypoint %>
   </head>
 
   <body>

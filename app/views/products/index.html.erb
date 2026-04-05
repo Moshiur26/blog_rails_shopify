@@ -1,2 +1,18 @@
-<div id="react-root" data-bootstrap="<%= json_escape(@bootstrap_data.to_json) %>"><%= json_escape(@bootstrap_data.to_json) %></div>
-<!--<div id="react-root"> <h1>Hello This is Product</h1> </div>-->
+<% content_for :vite_entrypoint, "products" %>
+
+<% products = @bootstrap_data&.dig(:products) || [] %>
+
+<div id="react-root" data-bootstrap="<%= json_escape(@bootstrap_data.to_json) %>">
+  <% if products.any? %>
+    <ul>
+      <% products.each do |product| %>
+        <li>
+          <strong><%= product[:title] %></strong>
+          <span>(<%= product[:handle] %>)</span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No products found.</p>
+  <% end %>
+</div>
