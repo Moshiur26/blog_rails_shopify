@@ -2,17 +2,37 @@
 
 class ProductsController < AuthenticatedController
   def index
-    products = ShopifyAPI::Product.all(limit: 10)
+    limit = params[:limit].to_i
+    limit = 12 if limit <= 0 || limit > 250
+    page_info = params[:page_info].presence
+
+    query = { limit: limit }
+    query[:page_info] = page_info if page_info.present?
+    products = ShopifyAPI::Product.all(**query)
     payload = products.map { |product| serialize_product(product) }
-    @product_data = {
+    @next_page_info = products.next_page_info if products.respond_to?(:next_page_info)
+    @prev_page_info = products.previous_page_info if products.respond_to?(:previous_page_info)
+    @prev_page_info ||= products.prev_page_info if products.respond_to?(:prev_page_info)
+    @page_limit = limit
+    @bootstrap_data = {
       shopOrigin: shop_domain,
       host: params[:host],
-      products: payload
+      products: payload,
+      nextPageInfo: @next_page_info,
+      previousPageInfo: @prev_page_info,
+      pageLimit: @page_limit
     }
 
     respond_to do |format|
       format.html { render :index }
-      format.json { render json: { products: payload } }
+      format.json do
+        render json: {
+          products: payload,
+          next_page_info: @next_page_info,
+          previous_page_info: @prev_page_info,
+          page_limit: @page_limit
+        }
+      end
     end
   end
 

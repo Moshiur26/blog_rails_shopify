@@ -1,6 +1,6 @@
 <% content_for :vite_entrypoint, "products" %>
 
-<% products = @product_data&.dig(:products) || [] %>
+<% products = @bootstrap_data&.dig(:products) || [] %>
 
 <style>
   .product-list {
@@ -49,9 +49,31 @@
     font-size: 13px;
     color: #0b4e9b;
   }
+
+  .product-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .page-button {
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #0b4e9b;
+    color: #0b4e9b;
+  }
+
+  .page-button.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 </style>
 
-<div id="react-root" data-bootstrap="<%= json_escape(@product_data.to_json) %>">
+<div id="react-root" data-bootstrap="<%= json_escape(@bootstrap_data.to_json) %>">
   <% if products.any? %>
     <ul class="product-list">
       <% products.each do |product| %>
@@ -62,6 +84,19 @@
         </li>
       <% end %>
     </ul>
+    <div class="product-pagination">
+      <% if @prev_page_info.present? %>
+        <%= link_to "Previous", products_path(shop: params[:shop], host: params[:host], page_info: @prev_page_info, limit: @page_limit), class: "page-button" %>
+      <% else %>
+        <span class="page-button disabled">Previous</span>
+      <% end %>
+
+      <% if @next_page_info.present? %>
+        <%= link_to "Next", products_path(shop: params[:shop], host: params[:host], page_info: @next_page_info, limit: @page_limit), class: "page-button" %>
+      <% else %>
+        <span class="page-button disabled">Next</span>
+      <% end %>
+    </div>
   <% else %>
     <p>No products found.</p>
   <% end %>
