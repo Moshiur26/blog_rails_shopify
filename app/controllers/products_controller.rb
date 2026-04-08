@@ -67,11 +67,13 @@ class ProductsController < AuthenticatedController
     image = product.image
     image ||= product.images&.first if product.respond_to?(:images)
     image_url = image&.dig("src") || image&.dig(:src)
+    primary_variant = product.variants&.first
     {
       id: product.id,
       title: product.title,
       handle: product.handle,
-      image_url: image_url
+      image_url: image_url,
+      primary_variant_id: primary_variant&.dig("id") || primary_variant&.dig(:id)
     }
   end
 

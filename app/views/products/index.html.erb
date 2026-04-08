@@ -194,6 +194,9 @@
           <div class="product-actions">
             <%= link_to "View QR", product_qr_code_path(product[:id], shop: params[:shop], host: params[:host]), class: "product-button primary" %>
             <%= link_to "Open Product", "https://#{@bootstrap_data&.dig(:shopOrigin)}/products/#{product[:handle]}", class: "product-button", target: "_blank", rel: "noopener" %>
+            <% if product[:primary_variant_id].present? %>
+              <%= link_to "Expiry Settings", edit_variant_setting_path(product[:primary_variant_id]), class: "product-button" %>
+            <% end %>
           </div>
         </li>
       <% end %>
