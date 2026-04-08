@@ -13,7 +13,7 @@ module Shopify
     end
 
     def call
-      return if shop.blank?
+      raise ArgumentError, "shop is required" if shop.blank?
 
       location = location_id.presence || fetch_primary_location_id
       inventory_by_variant.each do |variant_id, quantity|
@@ -26,7 +26,7 @@ module Shopify
     attr_reader :location_id, :shop, :variant_ids
 
     def inventory_by_variant
-      scope = ProductBatch.available_on
+      scope = shop.product_batches.available_on
       scope = scope.where(shopify_variant_id: variant_ids) if variant_ids.any?
 
       totals = scope.group(:shopify_variant_id).sum(:quantity)

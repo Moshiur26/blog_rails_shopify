@@ -16,7 +16,7 @@ class VariantSettingsController < AuthenticatedController
   private
 
   def set_variant_setting
-    @variant_setting = VariantSetting.for_variant(params[:id])
+    @variant_setting = VariantSetting.for_variant(shop: current_shop_record, variant_id: params[:id])
   end
 
   def variant_setting_params

@@ -1,7 +1,10 @@
 class ProductBatch < ApplicationRecord
+  belongs_to :shop
+
   scope :for_variant, ->(variant_id) { where(shopify_variant_id: variant_id.to_s) }
   scope :available_on, ->(date = Date.current) { where("expiry_date >= ?", date) }
 
+  validates :shop, presence: true
   validates :shopify_variant_id, presence: true
   validates :batch_number, presence: true
   validates :expiry_date, presence: true

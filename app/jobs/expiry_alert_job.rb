@@ -2,6 +2,8 @@ class ExpiryAlertJob < ApplicationJob
   queue_as :default
 
   def perform
-    Inventory::ExpiryAlertService.new.call
+    Shop.find_each do |shop|
+      Inventory::ExpiryAlertService.new(shop: shop).call
+    end
   end
 end

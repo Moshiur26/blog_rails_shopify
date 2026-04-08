@@ -42,7 +42,7 @@ class WebhooksController < ApplicationController
         quantity = line_item["quantity"].to_i
         next if variant_id.blank? || quantity <= 0
 
-        Inventory::BatchAllocator.new(shopify_variant_id: variant_id, quantity: quantity).call
+        Inventory::BatchAllocator.new(shop: shop, shopify_variant_id: variant_id, quantity: quantity).call
       end
 
       ProcessedWebhook.create!(webhook_id: webhook_id)
@@ -58,6 +58,9 @@ class WebhooksController < ApplicationController
     head :ok
   rescue Inventory::BatchAllocator::InsufficientStockError => e
     Rails.logger.error("Order allocation failed for webhook #{webhook_id}: #{e.message}")
+    head :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error("Order webhook processing failed for webhook #{webhook_id}: #{e.message}")
     head :unprocessable_entity
   rescue Shopify::InventorySync::SyncError => e
     Rails.logger.error("Order webhook inventory sync failed for webhook #{webhook_id}: #{e.message}")

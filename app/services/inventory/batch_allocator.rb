@@ -2,19 +2,21 @@ module Inventory
   class BatchAllocator
     class InsufficientStockError < StandardError; end
 
-    def initialize(shopify_variant_id:, quantity:, today: Date.current)
+    def initialize(shop:, shopify_variant_id:, quantity:, today: Date.current)
+      @shop = shop
       @shopify_variant_id = shopify_variant_id.to_s
       @quantity = quantity.to_i
       @today = today
     end
 
     def call
+      raise ArgumentError, "shop is required" if shop.blank?
       raise ArgumentError, "quantity must be positive" if quantity <= 0
 
       allocations = []
 
       ProductBatch.transaction do
-        batches = ProductBatch
+        batches = shop.product_batches
           .for_variant(shopify_variant_id)
           .available_on(today)
           .where("quantity > 0")
@@ -43,6 +45,6 @@ module Inventory
 
     private
 
-    attr_reader :quantity, :shopify_variant_id, :today
+    attr_reader :quantity, :shop, :shopify_variant_id, :today
   end
 end

@@ -5,18 +5,18 @@ class BatchesController < AuthenticatedController
 
   def index
     @variant_id = params[:variant_id].presence
-    @batches = ProductBatch.order(:expiry_date, :created_at)
+    @batches = current_shop_record.product_batches.order(:expiry_date, :created_at)
     @batches = @batches.for_variant(@variant_id) if @variant_id.present?
-    @settings_by_variant = VariantSetting.where(shopify_variant_id: @batches.map(&:shopify_variant_id).uniq).index_by(&:shopify_variant_id)
+    @settings_by_variant = current_shop_record.variant_settings.where(shopify_variant_id: @batches.map(&:shopify_variant_id).uniq).index_by(&:shopify_variant_id)
   end
 
   def new
-    @product_batch = ProductBatch.new(shopify_variant_id: params[:variant_id].presence)
-    redirect_to batches_path, alert: "Variant ID is required to create a batch." if @product_batch.shopify_variant_id.blank?
+    @product_batch = current_shop_record.product_batches.new(shopify_variant_id: params[:variant_id].presence)
+    return redirect_to(batches_path, alert: "Variant ID is required to create a batch.") if @product_batch.shopify_variant_id.blank?
   end
 
   def create
-    @product_batch = ProductBatch.new(product_batch_params)
+    @product_batch = current_shop_record.product_batches.new(product_batch_params)
 
     if @product_batch.save
       sync_variant_inventory(@product_batch.shopify_variant_id)
@@ -48,7 +48,7 @@ class BatchesController < AuthenticatedController
   private
 
   def set_product_batch
-    @product_batch = ProductBatch.find(params[:id])
+    @product_batch = current_shop_record.product_batches.find(params[:id])
   end
 
   def product_batch_params
