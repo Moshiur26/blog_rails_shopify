@@ -1,0 +1,215 @@
+<style>
+  .batch-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 16px 48px;
+    color: #10233d;
+  }
+
+  .batch-shell {
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px solid #d6e4f0;
+    border-radius: 24px;
+    box-shadow: 0 20px 45px rgba(16, 35, 61, 0.08);
+    padding: 24px;
+  }
+
+  .batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .batch-header h1,
+  .batch-header p {
+    margin: 0;
+  }
+
+  .batch-header p {
+    color: #526581;
+    margin-top: 6px;
+  }
+
+  .batch-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    border: 1px solid #114b8b;
+    font-size: 14px;
+    background: #ffffff;
+    color: #114b8b;
+  }
+
+  .button.primary {
+    background: #114b8b;
+    color: #ffffff;
+  }
+
+  .flash-banner {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    color: #9a3412;
+  }
+
+  .batch-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .batch-table th,
+  .batch-table td {
+    text-align: left;
+    padding: 14px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-expired {
+    color: #991b1b;
+    background: #fee2e2;
+  }
+
+  .status-soon {
+    color: #92400e;
+    background: #fef3c7;
+  }
+
+  .status-healthy {
+    color: #166534;
+    background: #dcfce7;
+  }
+
+  .table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .table-actions form {
+    display: inline;
+  }
+
+  @media (max-width: 720px) {
+    .batch-table,
+    .batch-table thead,
+    .batch-table tbody,
+    .batch-table th,
+    .batch-table td,
+    .batch-table tr {
+      display: block;
+    }
+
+    .batch-table thead {
+      display: none;
+    }
+
+    .batch-table tr {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      padding: 10px;
+    }
+
+    .batch-table td {
+      border: 0;
+      padding: 8px 0;
+    }
+  }
+</style>
+
+<div class="batch-page">
+  <div class="batch-shell">
+    <% if flash[:notice].present? %>
+      <div class="flash-banner"><%= flash[:notice] %></div>
+    <% elsif flash[:alert].present? %>
+      <div class="flash-banner"><%= flash[:alert] %></div>
+    <% end %>
+
+    <div class="batch-header">
+      <div>
+        <h1>Inventory Batches</h1>
+        <% if @variant_id.present? %>
+          <p>Variant: <strong><%= @variant_id %></strong></p>
+        <% else %>
+          <p>Showing all tracked batches across variants.</p>
+        <% end %>
+      </div>
+
+      <div class="batch-actions">
+        <% if @variant_id.present? %>
+          <%= link_to "Alert Settings", edit_variant_setting_path(@variant_id), class: "button" %>
+          <%= link_to "New Batch", new_batch_path(variant_id: @variant_id), class: "button primary" %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @batches.any? %>
+      <table class="batch-table">
+        <thead>
+          <tr>
+            <th>Batch Number</th>
+            <th>Expiry Date</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @batches.each do |batch| %>
+            <% alert_days = @settings_by_variant[batch.shopify_variant_id]&.expiry_alert_days.to_i %>
+            <% status_class, status_text =
+              if batch.expired?
+                ["status-expired", "Expired"]
+              elsif batch.expiring_soon?(alert_days)
+                ["status-soon", "Expiring Soon"]
+              else
+                ["status-healthy", "Healthy"]
+              end
+            %>
+            <tr>
+              <td>
+                <strong><%= batch.batch_number %></strong>
+                <div>Variant: <%= batch.shopify_variant_id %></div>
+              </td>
+              <td><%= batch.expiry_date %></td>
+              <td><%= batch.quantity %></td>
+              <td><span class="status-pill <%= status_class %>"><%= status_text %></span></td>
+              <td>
+                <div class="table-actions">
+                  <%= link_to "Edit", edit_batch_path(batch), class: "button" %>
+                  <%= button_to "Delete", batch_path(batch), method: :delete, class: "button", form: { data: { turbo_confirm: "Delete this batch?" } } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No batches found.</p>
+    <% end %>
+  </div>
+</div>

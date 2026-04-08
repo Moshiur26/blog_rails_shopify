@@ -32,7 +32,7 @@ class AuthController < ApplicationController
   def oauth_url(shop, state)
     query = {
       client_id: ENV["SHOPIFY_API_KEY"],
-      scope: ENV["SHOPIFY_SCOPES"],
+      scope: oauth_scopes,
       redirect_uri: "#{ENV["SHOPIFY_APP_URL"]}/auth/callback",
       state: state
     }.to_query
@@ -71,7 +71,7 @@ class AuthController < ApplicationController
   def register_webhooks(shop)
     webhook_map = {
       "APP_UNINSTALLED" => "app_uninstalled",
-      "ORDERS_CREATE" => "orders_create",
+      "ORDERS_CREATE" => "orders/create",
       "PRODUCTS_UPDATE" => "products_update"
     }
 
@@ -111,5 +111,9 @@ class AuthController < ApplicationController
         "X-Shopify-Access-Token" => shop.shopify_token
       }
     )
+  end
+
+  def oauth_scopes
+    ENV["SHOPIFY_SCOPES"].presence || "read_products,read_orders,write_inventory,read_locations"
   end
 end

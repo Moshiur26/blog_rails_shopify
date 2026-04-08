@@ -1,0 +1,52 @@
+<style>
+  .batch-form-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 16px 48px;
+  }
+
+  .batch-form-card {
+    background: #ffffff;
+    border: 1px solid #d6e4f0;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 18px 40px rgba(16, 35, 61, 0.08);
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .field-group input {
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  .form-errors {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+</style>
+
+<div class="batch-form-page">
+  <div class="batch-form-card">
+    <h1>Edit Batch</h1>
+    <p>Variant: <strong><%= @product_batch.shopify_variant_id %></strong></p>
+    <%= render "form", product_batch: @product_batch %>
+  </div>
+</div>

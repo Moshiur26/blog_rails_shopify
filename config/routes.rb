@@ -11,11 +11,14 @@ Rails.application.routes.draw do
 
   get "/products", to: "products#index"
   get "/products/:id/qr_code", to: "products#qr_code", as: :product_qr_code
+  resources :batches
+  resources :variant_settings, only: [:edit, :update]
 
   get "/auth", to: "auth#install"
   get "/auth/callback", to: "auth#callback"
   post "/webhooks/app_uninstalled", to: "webhooks#app_uninstalled"
-  post "/webhooks/orders_create", to: "webhooks#orders_create"
+  post "/webhooks/orders/create", to: "webhooks#order_create"
+  post "/webhooks/orders_create", to: "webhooks#order_create"
   post "/webhooks/products_update", to: "webhooks#products_update"
 
   mount ShopifyApp::Engine, at: '/'
