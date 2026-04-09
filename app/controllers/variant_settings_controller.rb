@@ -7,7 +7,7 @@ class VariantSettingsController < AuthenticatedController
 
   def update
     if @variant_setting.update(variant_setting_params)
-      redirect_to batches_path(variant_id: @variant_setting.shopify_variant_id), notice: "Expiry alert settings updated."
+      redirect_to batches_path({ variant_id: @variant_setting.shopify_variant_id }.merge(app_context_params)), notice: "Expiry alert settings updated."
     else
       render :edit, status: :unprocessable_entity
     end
